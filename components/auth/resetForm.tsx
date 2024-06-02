@@ -5,7 +5,7 @@ import { CardWrapper } from "./card-wrapper"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel } from "../ui/form"
 import * as z from "zod"
-import { LoginSchema } from "../../schema/index"
+import { ResetSchema } from "../../schema/index"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button";
 import { CardError } from "./error-form";
@@ -18,21 +18,20 @@ import Link from "next/link";
 
 
 
-export const LoginForm = () => {
+export const ResetForm = () => {
 
     const [error , setError] = useState<string | undefined>("")
     const [success , setSuccess] = useState<string | undefined>("")
     const searchParams = useSearchParams()
     // const callbackUrl = searchParams.get("callbackUrl");
 
-    const form = useForm<z.infer<typeof LoginSchema>>({
-        resolver: zodResolver(LoginSchema),
+    const form = useForm<z.infer<typeof ResetSchema>>({
+        resolver: zodResolver(ResetSchema),
         defaultValues: {
-            email: "",
-            password: ""
+            email: ""
         }
     })    
-    const onSubmit = (values: z.infer<typeof LoginSchema>)=> {
+    const onSubmit = (values: z.infer<typeof ResetSchema>)=> {
         setError("");
         setSuccess("");
         // login(values).then((data)=>{
@@ -54,7 +53,7 @@ export const LoginForm = () => {
     }
 
     return (
-        <CardWrapper headerLabel="Welcome back" backButtonLabel="Don't have an account" backButtonHref="/auth/register" showSocial={true}>
+        <CardWrapper headerLabel="Reset Password" backButtonLabel="Back to Login" backButtonHref="/auth/login">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
                     <div className="space-y-4">
@@ -75,24 +74,12 @@ export const LoginForm = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input {...field} type="password" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        
                     </div>
                     <FormError message={error}/>
                     <FormSuccess message={success}/>
                     {/* <CardError/> */}
-                    <Link className="mt-3" href={"/auth/reset"}>Forgot Password ?</Link>
-                    <Button type="submit" className="w-full">Login</Button>
+                    <Button type="submit" className="w-full">Rest Password</Button>
                 </form>
             </Form>
         </CardWrapper>

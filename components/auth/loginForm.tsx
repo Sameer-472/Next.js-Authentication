@@ -91,7 +91,7 @@ export const LoginForm = () => {
                     <FormError message={error}/>
                     <FormSuccess message={success}/>
                     {/* <CardError/> */}
-                    <Link className="mt-3" href={"/auth/reset"}>Forgot Password ?</Link>
+                    <Button size={"sm"} variant={"link"} asChild className="px-0 font-normal"><Link className="mt-3" href={"/auth/reset"}>Forgot Password ?</Link></Button>
                     <Button type="submit" className="w-full">Login</Button>
                 </form>
             </Form>

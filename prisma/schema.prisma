@@ -8,27 +8,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 // prisma/schema.prisma
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -36,18 +34,17 @@ model Account {
   @@map("accounts")
 }
 
-model VerificicationToken  {
-  id String @id @default(cuid())
-  email String
-  token String @unique
-  expires DateTime,
-  
+model VerificicationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
 
-  @@unique([email , token])
+  @@unique([email, token])
 }
 
 enum UserRole {
-  Admin 
+  admin
   user
 }
 
@@ -57,10 +54,26 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  role          UserRole @default(user)
+  role          UserRole  @default(user)
   accounts      Account[]
   password      String?
+  isTwoFactorEnable Boolean @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
 }
 
+model PasswordResetToken {
+  id      String @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
 
+  @@unique([email, token])
+}
 
+model TwoFactorConfirmation {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId] , references: [id] ,onDelete: Cascade)
+
+  @@unique([userId])
+}

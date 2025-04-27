@@ -36,8 +36,8 @@ export default auth((req) => {
   // req.auth
 })
 
-// Optionally, don't invoke Middleware on some paths
-// Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+
+// its means when ever this route entered the above functions will invoke
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 }

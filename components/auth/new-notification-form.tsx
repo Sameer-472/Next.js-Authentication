@@ -5,6 +5,8 @@ import { CardWrapper } from "./card-wrapper";
 import { BeatLoader } from "react-spinners";
 import { useCallback, useEffect, useState } from "react";
 import { newVerification } from "@/actions/new-verification";
+import { FormSuccess } from "../form-success";
+import { FormError } from "../form-error";
 
 export const NewVerificationForm = () => {
 
@@ -32,7 +34,9 @@ export const NewVerificationForm = () => {
     return (
         <CardWrapper headerLabel="Confirming you verification" backButtonLabel="Back to Login" backButtonHref="/auth/login">
             <div className="flex items-center w-full justify-center">
-                <BeatLoader />
+                {!success && !error && <BeatLoader />}
+                <FormSuccess message={success} />
+                <FormError message={error} />
             </div>
         </CardWrapper>
     )

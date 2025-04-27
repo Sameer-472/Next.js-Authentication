@@ -23,10 +23,11 @@ export const newVerification = async (token: string) => {
     if (!existingUser) {
         return { error: "User does not exist" }
     }
-    console.log("existingToken", existingToken)
+    console.log("existingToken", existingToken);
+
     await db.user.update({
         where: {
-            id: existingToken.id,
+            id: existingUser.id,
         },
         data: {
             emailVerified: new Date(),

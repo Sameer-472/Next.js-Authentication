@@ -4,6 +4,7 @@ import { db } from "./lib/db"
 import { getUserById } from "./data/user"
 import NextAuth, { type DefaultSession } from "next-auth";
 import { UserRole } from "@prisma/client";
+import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 
 
 // export const {
@@ -14,17 +15,17 @@ import { UserRole } from "@prisma/client";
 // })
 
 declare module "next-auth" {
-   interface Session {
+  interface Session {
     user: {
       /** The user's postal address. */
       role: "admin" | "user"
-     
+
     } & DefaultSession["user"]
   }
-   interface SignIn {
+  interface SignIn {
     user: {
       id: string
-     
+
     } & DefaultSession["user"]
   }
 }
@@ -36,10 +37,21 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       const existingUser = await getUserById(user.id);
       if (!existingUser?.emailVerified) return false;
 
+      if (existingUser.isTwoFactorEnable) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id)
+        if (!twoFactorConfirmation) return false;
+        await db.twoFactorConfirmation.delete({
+          where: { id: twoFactorConfirmation.id }
+        })
+
+        return true
+      }
       return true;
+
+
     },
     async jwt({ token }) {
-      console.log({token: token})
+      console.log({ token: token })
       if (!token.sub) return token
 
       const existingUser = await getUserById(token.sub);

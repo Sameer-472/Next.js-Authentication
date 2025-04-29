@@ -49,20 +49,29 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  role          UserRole  @default(user)
-  accounts      Account[]
-  password      String?
-  isTwoFactorEnable Boolean @default(false)
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String?                @unique
+  emailVerified         DateTime?              @map("email_verified")
+  image                 String?
+  role                  UserRole               @default(user)
+  accounts              Account[]
+  password              String?
+  isTwoFactorEnable     Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
 }
 
 model PasswordResetToken {
-  id      String @id @default(cuid())
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(cuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -71,9 +80,9 @@ model PasswordResetToken {
 }
 
 model TwoFactorConfirmation {
-  id String @id @default(cuid())
+  id     String @id @default(cuid())
   userId String
-  user User @relation(fields: [userId] , references: [id] ,onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
 }
